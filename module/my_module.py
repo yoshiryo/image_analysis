@@ -4,7 +4,7 @@ import MySQLdb
 import re
 import glob
 import tarfile
-
+from collections import Counter
 def read_image():
     matchPath = glob.glob('/home/ueoai/image_analysys/image/mysql/**/layer.tar', recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
     matchPath.sort()
@@ -168,7 +168,8 @@ def read_cve_version():
                     txt += line
             if 'Description:' in line:
                 p = True
-    cnt = 0
+    id = 0
+    w = []
     for pth in matchPath:
         with open(pth) as f:
             lines = f.readlines()
@@ -179,10 +180,18 @@ def read_cve_version():
             if p:
                 if 'Ubuntu-Description:' in line:
                     p = False
-                    ver = list(set(re.findall('\d+(?:\.\d+)+', txt)))
-                    ver_list.append(ver)
+                    l = txt.split(" ")
+                    for i in range(len(l)):
+                        if l[i] in ver_list[id]:
+                            if l[i-1] == "CVSS":
+                                print(cve_id)
+                            w.append(l[i-1])
+                    id += 1
                     txt = ""
                 else:
                     txt += line
             if 'Description:' in line:
                 p = True
+            if 'Candidate:' in line:
+                cve_id = line
+    #print(Counter(w))
