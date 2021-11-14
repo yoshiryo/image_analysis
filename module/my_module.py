@@ -214,3 +214,5 @@ def read_cve_version():
                 cve_id = line
     print(Counter(w))
     #print(ver_list)
+
+    
