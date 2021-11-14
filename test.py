@@ -1,28 +1,7 @@
-test = "Version: 10.1ubuntu2.10"
-
-
-target1 = "Version: "
-target2 = ":"
-target3 = "-"
-target4 = "+"
-target5 = "ubuntu"
-idx = test.find(target1)
-if idx != -1:
-    r = test[idx+len(target1):]
-
-idx = r.find(target2)
-if idx != -1:
-    r = r[idx+len(target2):]
-
-idx = r.find(target3)
-if idx != -1:
-    r = r[:idx+len(target3)-1]
-
-idx = r.find(target4)
-if idx != -1:
-    r = r[:idx+len(target4)-1]
-print(r)
-idx = r.find(target5)
-if idx != -1:
-    r = r[:idx]
-print(r)
+txt = "An issue was discovered in MediaWiki through 1.36.2. A parser functionrelated to loop control allowed for an infinite loop (and php-fpm hang)within the Loops extension because egLoopsCountLimit is mishandled. Thiscould lead to memory exhaustion."
+ver_list = ["1.36.2"]
+l = txt.split(" ")
+for i in range(len(l)):
+    if l[i].startswith:
+        if l[i-1] == "through":
+            print("ok")
