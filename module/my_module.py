@@ -5,6 +5,7 @@ import re
 import glob
 import tarfile
 from collections import Counter
+
 def read_image():
     matchPath = glob.glob('/home/ueoai/image_analysys/image/mysql/**/layer.tar', recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
     matchPath.sort()
@@ -170,6 +171,10 @@ def read_cve_version():
                 p = True
     id = 0
     w = []
+    ban_words = ["CVSS", "Score", "Vector:"]
+    target_before_words = ["and earlier.", "and prior.", "before"]
+    target_after_words = ["after"]
+    target_now_words = ["version", "versions", "and"]
     for pth in matchPath:
         with open(pth) as f:
             lines = f.readlines()
@@ -182,16 +187,30 @@ def read_cve_version():
                     p = False
                     l = txt.split(" ")
                     for i in range(len(l)):
-                        if l[i] in ver_list[id]:
-                            if l[i-1] == "CVSS":
-                                print(cve_id)
-                            w.append(l[i-1])
+                        for j in range(len(ver_list[id])):
+                            if ver_list[id][j] in l[i]:
+                                if l[i-1] not in ban_words:
+                                    #print(cve_id)
+                                    w.append(l[i-1])
+                                if l[i-1] == "and":
+                                    print(cve_id)
+                                """
+                                if i < len(l)-2:
+                                    if (l[i+1] +" " + l[i+2]) == "and prior.":
+                                        print(cve_id)
+                                    elif (l[i+1] +" " + l[i+2]) == "and earlier.":
+                                        print(cve_id)
+                                    else:
+                                        pass
+                                """
                     id += 1
                     txt = ""
                 else:
                     txt += line
+                    txt += " "
             if 'Description:' in line:
                 p = True
             if 'Candidate:' in line:
                 cve_id = line
-    #print(Counter(w))
+    print(Counter(w))
+    #print(ver_list)
