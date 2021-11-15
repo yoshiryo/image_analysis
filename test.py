@@ -1,7 +1,1 @@
-txt = "An issue was discovered in MediaWiki through 1.36.2. A parser functionrelated to loop control allowed for an infinite loop (and php-fpm hang)within the Loops extension because egLoopsCountLimit is mishandled. Thiscould lead to memory exhaustion."
-ver_list = ["1.36.2"]
-l = txt.split(" ")
-for i in range(len(l)):
-    if l[i].startswith:
-        if l[i-1] == "through":
-            print("ok")
+print(len("9f17dbf04ddf55ae48f5bbafea4c4920ea943215 6ec51459df7117dbe9b1fef2174951f80877a850|ca58fbe06c54795f00db79e447f94c2028d30124|local-CVE-2021-20177"))

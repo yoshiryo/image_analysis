@@ -10,5 +10,7 @@ CREATE TABLE analysys.image
     name            VARCHAR(64)         NOT NULL,
     version         VARCHAR(20)                 ,
     cve_score       VARCHAR(50)                 ,
-    priority        VARCHAR(30)                                
+    priority        VARCHAR(30)                 ,
+    os_version      VARCHAR(200)                ,
+    status          VARCHAR(200)                       
 );
