@@ -6,10 +6,10 @@ import glob
 import tarfile
 from collections import Counter
 
-def read_image():
-    matchPath = glob.glob('/home/ueoai/image_analysys/image/mysql/**/layer.tar', recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
+def read_image(image_name):
+    matchPath = glob.glob(f"""/home/ueoai/image_analysys/image/{image_name}/**/layer.tar""", recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
     matchPath.sort()
-    package_path = "/home/ueoai/image_analysys/output/package.txt"
+    package_path = f"""/home/ueoai/image_analysys/output/package_{image_name}.txt"""
     with open(package_path, mode='w') as f:
         f.write(" ")
     for mpth in matchPath:
@@ -25,9 +25,9 @@ def read_image():
                     with open(package_path, mode='ab') as f:
                         f.write(body)
 
-def write_package():
-    package_path = "/home/ueoai/image_analysys/output/package.txt" #imageから取得したパッケージ情報
-    output_path = "/home/ueoai/image_analysys/output/output.txt" #最終的な出力結果
+def write_package(image_name):
+    package_path = f"""/home/ueoai/image_analysys/output/package_{image_name}.txt""" #imageから取得したパッケージ情報
+    output_path = f"""/home/ueoai/image_analysys/output/output_{image_name}.txt""" #最終的な出力結果
     with open(package_path) as f:
         lines = f.readlines()
     lines_strip = [line.strip() for line in lines]
@@ -52,7 +52,6 @@ def write_package():
     with open(output_path, mode='w') as f:
         for ans in arr:
             if len(ans) == 2 or len(ans) == 3:
-                print(ans[1])
                 target1 = "Version: "
                 target2 = ":"
                 target3 = "-"

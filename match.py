@@ -12,8 +12,8 @@ connection = MySQLdb.connect(
 # テーブル内部で日本語を扱うために追加
 )
 cursor = connection.cursor()
-
-path = "/home/ueoai/image_analysys/output/output.txt"
+image_name = input("分析するイメージ名を入力 : ")
+path = f"""/home/ueoai/image_analysys/output/output_{image_name}.txt"""
 with open(path) as f:
         lines = f.readlines()
 lines_strip = [line.strip() for line in lines]
@@ -21,7 +21,7 @@ lines_strip = [line.strip() for line in lines]
 cnt = []
 for line in lines_strip:
     pac = line.split(" ")[1].split("-")[0]
-    cursor.execute(f"""select priority from image where name like '%{pac}%' and os_version = 'upstream' and status = 'needed';""")
+    cursor.execute(f"""select priority from image where name like '%{pac}%' and status = 'needed';""")
     p = cursor.fetchall()
     for i in p:
         cnt.append(i)
