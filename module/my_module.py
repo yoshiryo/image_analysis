@@ -9,7 +9,7 @@ from collections import Counter
 def read_image(image_name):
     matchPath = glob.glob(f"""/home/ueoai/image_analysys/image/{image_name}/**/layer.tar""", recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
     matchPath.sort()
-    package_path = f"""/home/ueoai/image_analysys/output/package_{image_name}.txt"""
+    package_path = f"""/home/ueoai/image_analysys/output/pac/package_{image_name}.txt"""
     with open(package_path, mode='w') as f:
         f.write(" ")
     for mpth in matchPath:
@@ -26,7 +26,7 @@ def read_image(image_name):
                         f.write(body)
 
 def write_package(image_name):
-    package_path = f"""/home/ueoai/image_analysys/output/package_{image_name}.txt""" #imageから取得したパッケージ情報
+    package_path = f"""/home/ueoai/image_analysys/output/pac/package_{image_name}.txt""" #imageから取得したパッケージ情報
     output_path = f"""/home/ueoai/image_analysys/output/output_{image_name}.txt""" #最終的な出力結果
     with open(package_path) as f:
         lines = f.readlines()
