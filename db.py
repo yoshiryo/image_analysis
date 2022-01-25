@@ -6,8 +6,8 @@ import MySQLdb
 # データベースへの接続とカーソルの生成
 connection = MySQLdb.connect(
     host='localhost',
-    user='ueoai',
-    passwd='ueoai0622',
+    user='',
+    passwd='',
     db='analysys',
 # テーブル内部で日本語を扱うために追加
 )

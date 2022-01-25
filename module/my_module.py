@@ -5,6 +5,26 @@ import re
 import glob
 import tarfile
 from collections import Counter
+import pandas as pd
+import psycopg2 as psy2
+import json
+
+def db_connect():
+    with open('/home/ueoai/image_analysys/module/pass.json') as f:
+        js = json.load(f)
+    user = js['db']['id']
+    password = js['db']['pw']
+
+    # データベースへの接続とカーソルの生成
+    connection = MySQLdb.connect(
+        host='localhost',
+        user=user,
+        passwd=password,
+        db='analysys',
+    # テーブル内部で日本語を扱うために追加
+    )
+    cursor = connection.cursor()
+    return connection, cursor
 
 def read_image(image_name):
     matchPath = glob.glob(f"""/home/ueoai/image_analysys/image/{image_name}/**/layer.tar""", recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
@@ -85,15 +105,7 @@ def write_package(image_name):
                 continue
 
 def read_cve():
-    # データベースへの接続とカーソルの生成
-    connection = MySQLdb.connect(
-        host='localhost',
-        user='ueoai',
-        passwd='ueoai0622',
-        db='analysys',
-    # テーブル内部で日本語を扱うために追加
-    )
-    cursor = connection.cursor()
+    connection, cursor = db_connect()
 
     matchPath = glob.glob('/home/ueoai/ubuntu-cve-tracker/active/CVE-*', recursive=True)
     matchPath.sort()
@@ -214,4 +226,50 @@ def read_cve_version():
     print(Counter(w))
     #print(ver_list)
 
-    
+def match():
+    connection, cursor = db_connect()
+
+    image_name = input("分析するイメージを入力 : ")
+    mpth = f"""/home/ueoai/image_analysys/output/output_{image_name}.txt"""
+
+    with open(mpth) as f:
+            lines = f.readlines()
+    lines_strip = [line.strip() for line in lines]
+
+    cnt = []
+    for line in lines_strip:
+        pac = line.split(" ")[1].split("-")[0]
+        #cursor.execute(f"""select name, priority from image where name like '{pac}' and status = 'needed' and os_version = 'focal';""") #ubuntu20
+        cursor.execute(f"""select priority from image where name like '{pac}' and status = 'needed' and os_version = 'bionic';""") #ubuntu18
+        p = cursor.fetchall()
+        for i in p:
+            cnt.append(i)
+    c = Counter(cnt)
+    print(mpth, c)
+
+    cursor.close()
+    connection.close()
+
+def match_all():
+    connection, cursor = db_connect()
+
+    matchPath = glob.glob("/home/ueoai/image_analysys/output/*.txt", recursive=True)
+
+    for mpth in matchPath:
+        with open(mpth) as f:
+                lines = f.readlines()
+        lines_strip = [line.strip() for line in lines]
+
+        cnt = []
+        for line in lines_strip:
+            pac = line.split(" ")[1].split("-")[0]
+            #pac = line.split(" ")[1]
+            cursor.execute(f"""select priority from image where name like '{pac}' and status = 'needed' and os_version = 'focal';""") #ubuntu20
+            #cursor.execute(f"""select priority from image where name like '{pac}' and status = 'needed' and os_version = 'bionic';""") #ubuntu18
+            p = cursor.fetchall()
+            for i in p:
+                cnt.append(i)
+        c = Counter(cnt)
+        print(mpth, c)
+    cursor.close()
+    connection.close()

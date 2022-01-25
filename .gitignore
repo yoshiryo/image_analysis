@@ -1,6 +1,4 @@
 image/
 module/__pycache__
-module/__pycache__/my_module.cpython-38.pyc
 output/
-module/__pycache__/my_module.cpython-38.pyc
-module/__pycache__/my_module.cpython-38.pyc
+module/pass.json
