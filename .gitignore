@@ -1,4 +1,4 @@
 image/
-module/__pycache__
+module/__pycache__/
 output/
 module/pass.json
