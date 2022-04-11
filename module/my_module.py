@@ -1,5 +1,6 @@
 import glob
 from os import replace
+import os
 import MySQLdb
 import re
 import glob
@@ -43,6 +44,26 @@ def read_image(image_name):
                     # 各ファイルの内容を読み込む
                     body = fp.read()
                     with open(package_path, mode='ab') as f:
+                        f.write(body)
+
+def read_image_os(image_name):
+    matchPath = glob.glob(f"""/home/ueoai/image_analysys/image/{image_name}/**/layer.tar""", recursive=True) #mysqlの部分を変えると好きな.tarが取得できる
+    matchPath.sort()
+    os_info_path = f"""/home/ueoai/image_analysys/output/os/os_{image_name}.txt"""
+    os_path_list = ["etc/redhat-release", "etc/issue", "etc/os_release"]
+    with open(os_info_path, mode='w') as f:
+        f.write(" ")
+    for mpth in matchPath:
+        with tarfile.open(mpth, 'r') as tarf:
+            # アーカイブに含まれるファイルの目録
+            members = tarf.getmembers()
+            for member in members:
+                if member.name in os_path_list:
+                    # アーカイブに含まれる各ファイルを開く
+                    fp = tarf.extractfile(member)
+                    # 各ファイルの内容を読み込む
+                    body = fp.read()
+                    with open(os_info_path, mode='ab') as f:
                         f.write(body)
 
 def write_package(image_name):
